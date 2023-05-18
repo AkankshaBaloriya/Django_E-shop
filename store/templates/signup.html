@@ -1,0 +1,58 @@
+{% extends 'base.html'%}
+{% block content%}
+
+
+<div class="container">
+    <div class="p-4 m-4">
+    <div class="col-lg-5 mx-auto border rounded p-4">
+      <h3 class="alert alert-light border rounded">Create an account</h3>
+        <form action="signup" method="POST">
+          {% csrf_token %}
+          {% if error %}
+          <div class="alert alert-success" role="alert">
+          {{ error }}
+          </div>
+          {% endif %}
+
+{% comment %} email  {% endcomment %}
+        <div class="form-group m-2">
+            <label for="">First name</label>
+            <input required type="text" name="firstname" id="" class="form-control form-control-sm" placeholder="" value={{ values.firstname}}>
+        </div>
+
+{% comment %} email  {% endcomment %}
+        <div class="form-group m-2">
+            <label for="">Last name</label>
+            <input required type="text" name="lastname" id=""  class="form-control form-control-sm
+            " placeholder="" value={{ values.lastname}}>
+          </div>
+
+{% comment %} email  {% endcomment %}
+        <div class="form-group m-2">
+          <label for="">Email</label>
+          <input required  type="email" name="email" id="email"  class="form-control form-control-sm
+          " placeholder="example@gmail.com" value={{ values.email}}>
+        </div>
+
+{% comment %} password  {% endcomment %}
+        <div class="form-group m-2">
+            <label for="">Password</label>
+            <input required type="password" name="password" id="password"  class="form-control form-control-sm
+            " placeholder="">
+          </div>
+          
+{% comment %} password  {% endcomment %}
+        <div class="form-group m-2">
+            <label for="">Phone</label>
+            <input required type="text" name="phone" id=""  class="form-control form-control-sm
+             " placeholder="89********" value={{ values.phone}}>
+          </div>
+          
+          <div class="form group m-2">
+              <button class="btn btn-info mt-2" type="submit " value="Create an account"> Create an account</button>
+          </div>
+        </form>
+    </div>
+    </div>
+</div>
+{% endblock%}
