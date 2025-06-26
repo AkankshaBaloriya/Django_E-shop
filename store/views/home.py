@@ -14,6 +14,7 @@ class Index(View):
         remove=request.POST.get('remove')
         print(product)
         cart=request.session.get('cart')
+        print(request.session.get("customer"))
         if cart:
             quantity=cart.get(product)
             if quantity:
