@@ -1,0 +1,8 @@
+name: Django Project
+jobs:
+  build
+    on:
+      Push
+      Pull
+    branches:
+      main
