@@ -5,4 +5,5 @@ django-database-url==1.0.3
 gunicorn==20.1.0
 # psycopg2-binary==2.9.5
 sqlparse==0.4.3
-Pillow
+Pillow==10.0.0
+flake8==6.0.0
