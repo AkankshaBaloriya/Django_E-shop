@@ -51,32 +51,35 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
-            # Pull new image
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/django_e-shop:${{ env.IMAGE_TAG }}
-
-            # Rename current container as backup if exists
-            if [ $(docker ps -q -f name=django-container) ]; then
-              docker rename django-container django-container-backup
-            fi
-
-            # Run new container
-            docker run -d -p 8000:8000 --restart unless-stopped --name django-container ${{ secrets.DOCKER_HUB_USERNAME }}/django_e-shop:${{ env.IMAGE_TAG }}
-
-            # Run migrations, rollback if fail
-            if ! docker exec django-container python manage.py migrate; then
-              echo "Migration failed, rolling back..."
-              docker stop django-container || true
-              docker rm django-container || true
-              docker rename django-container-backup django-container || true
-              docker start django-container || true
-              exit 1
-            fi
-
-            # Remove backup if everything is fine
-            if [ $(docker ps -q -f name=django-container-backup) ]; then
-              docker stop django-container-backup || true
-              docker rm django-container-backup || true
-            fi
+             # 🔐 LOGIN ON SERVER (THIS IS MISSING)
+              echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+              # Pull new image
+              docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/django_e-shop:${{ env.IMAGE_TAG }}
+  
+              # Rename current container as backup if exists
+              if [ "$(docker ps -q -f name=django-container)" ]; then
+                docker rename django-container django-container-backup
+              fi
+  
+              # Run new container
+              docker run -d -p 8000:8000 --restart unless-stopped --name django-container ${{ secrets.DOCKER_HUB_USERNAME }}/django_e-shop:${{ env.IMAGE_TAG }}
+  
+              # Run migrations, rollback if fail
+              if ! docker exec django-container python manage.py migrate; then
+                echo "Migration failed, rolling back..."
+                docker stop django-container || true
+                docker rm django-container || true
+                docker rm -f django-container-backup || true
+                docker rename django-container-backup django-container || true
+                docker start django-container || true
+                exit 1
+              fi
+  
+              # Remove backup if everything is fine
+              if [ "$(docker ps -q -f name=django-container-backup)" ]; then
+                docker stop django-container-backup || true
+                docker rm django-container-backup || true
+              fi
 
 
 
