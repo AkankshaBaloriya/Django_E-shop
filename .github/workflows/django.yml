@@ -7,41 +7,70 @@ on:
   pull_request:
     branches:
       - master
-      
+
+
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v3
+
+      # 1. Build Docker image
+      - name: Build Docker image
+        run: docker build -t django-app .
+
+      # 2. Run container with name
+      - name: Run container
+        run: docker run -d -p 8000:8000 --name django-container django-app
+
+      # 3. Wait for container to be ready
+      - name: Wait for container
+        run: sleep 5
+
+      # 4. Run migrations inside container
+      - name: Run migrations
+        run: docker exec django-container python manage.py migrate
+
+      # 5. Run tests inside container
+      - name: Run tests
+        run: docker exec django-container python manage.py test
+        
+#WITHOUT DOCKER PIPELINE BELOW :-
+#jobs:
+#  test:
+#    runs-on: ubuntu-latest
+
+#    steps:
       #1. checkout code 
-      - name: Checkout code 
-        uses: actions/checkout@v3
+  #    - name: Checkout code 
+ #       uses: actions/checkout@v3
 
         #2. SETUP PYTHON
-      - name: SETUP PYTHON
-        uses: actions/setup-python@v4
-        with:
-          python-version : "3.10"
+   #   - name: SETUP PYTHON
+   #     uses: actions/setup-python@v4
+   #     with:
+   #       python-version : "3.10"
 
          # 3. Install dependencies
-      - name: INSTALL DEPENDENCIES 
-        run:  |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-#for code testing we setup this thing so bad code will not push in prod so for testing purpouse i am commenting it
-    #  - name: LINT CODE 
-    #    run: |
-    #      pip install flake8
+    #  - name: INSTALL DEPENDENCIES 
+    #    run:  |
+    #      python -m pip install --upgrade pip
+    #      pip install -r requirements.txt
+
+     # - name: LINT CODE 
+     #   run: |
+     #     pip install flake8
      #     flake8 .
 
        # 4. Run migrations
-      - name: RUN migrations
-        run:  python manage.py migrate
+     # - name: RUN migrations
+     #   run:  python manage.py migrate
       #  env:
        #   SECRET_KEY: django-insecure-verylongsecurekey123456
        #   DEBUG: "False"
 
       # 5. Run tests
-      - name: RUN tests
-        run: python manage.py test
+    #  - name: RUN tests
+    #    run: python manage.py test
 
