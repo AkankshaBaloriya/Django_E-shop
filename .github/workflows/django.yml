@@ -19,7 +19,7 @@ jobs:
 
       - name : SET image tag 
         id : vars
-        run : echo " IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+        run : echo "IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
 
 
