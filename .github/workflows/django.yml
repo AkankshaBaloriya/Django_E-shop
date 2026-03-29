@@ -60,7 +60,7 @@ jobs:
             fi
 
             # Run new container
-            docker run -d -p 8000:8000 --restart unless-stopped --name django-container ${{ secrets.DOCKER_HUB_USERNAME }}/django-app:${{ env.IMAGE_TAG }}
+            docker run -d -p 8000:8000 --restart unless-stopped --name django-container ${{ secrets.DOCKER_HUB_USERNAME }}/django_e-shop:${{ env.IMAGE_TAG }}
 
             # Run migrations, rollback if fail
             if ! docker exec django-container python manage.py migrate; then
