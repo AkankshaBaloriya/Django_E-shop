@@ -52,7 +52,7 @@ jobs:
           port: 22
           script: |
             # Pull new image
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/django-app:${{ env.IMAGE_TAG }}
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/django_e-shop:${{ env.IMAGE_TAG }}
 
             # Rename current container as backup if exists
             if [ $(docker ps -q -f name=django-container) ]; then
